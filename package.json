@@ -1,0 +1,78 @@
+{
+  "name": "Interflash",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "sync": "node sync-git.js",
+    "clean": "cd android && ./gradlew clean && cd ..",
+    "buildRelease": "cd android && ./gradlew bundleRelease && cd ..",
+    "generate-bootsplash": "react-native generate-bootsplash assets/bootsplash_logo_original.png --background-color=FFFFFF --logo-width=100 --assets-path=assets --flavor=main"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.10",
+    "@react-native-community/netinfo": "^9.3.1",
+    "@react-native-masked-view/masked-view": "^0.2.7",
+    "@types/base-64": "^1.0.0",
+    "@types/color": "^3.0.3",
+    "@types/react-native-extra-dimensions-android": "^1.2.0",
+    "@types/react-native-vector-icons": "^6.4.12",
+    "@types/react-native-video": "^5.0.14",
+    "axios": "^0.27.2",
+    "base-64": "^1.0.0",
+    "iptv-playlist-parser": "^0.12.1",
+    "react": "17.0.2",
+    "react-native": "npm:react-native-tvos@0.68.2-7",
+    "react-native-device-info": "^10.2.0",
+    "react-native-extra-dimensions-android": "^1.2.5",
+    "react-native-fast-image": "^8.6.1",
+    "react-native-fs": "^2.20.0",
+    "react-native-fullscreen-chz": "^4.0.12",
+    "react-native-linear-gradient": "^2.6.2",
+    "react-native-modal": "^13.0.1",
+    "react-native-orientation-locker": "^1.5.0",
+    "react-native-paper": "5.0.0-rc.5",
+    "react-native-ping": "^1.2.7",
+    "react-native-pip-android": "^1.0.1",
+    "react-native-reanimated": "^2.10.0",
+    "react-native-skeleton-placeholder": "^5.0.0",
+    "react-native-system-navigation-bar": "^2.0.0",
+    "react-native-vector-icons": "^9.2.0",
+    "react-native-video": "6.0.0-alpha.3",
+    "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "@react-native-community/eslint-config": "^2.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/react-native": "^0.67.3",
+    "@types/react-test-renderer": "^17.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.17.0",
+    "@typescript-eslint/parser": "^5.17.0",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.32.0",
+    "jest": "^26.6.3",
+    "metro-react-native-babel-preset": "^0.67.0",
+    "react-test-renderer": "17.0.2",
+    "typescript": "^4.4.4"
+  },
+  "resolutions": {
+    "@types/react": "^17"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
+}
