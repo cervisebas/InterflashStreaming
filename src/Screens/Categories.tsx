@@ -8,7 +8,7 @@ import { CategoriesGroups, Channels } from "../Scripts/ApiWisp/Types";
 type IProps = {
     active: number;
     list: Channels[];
-    openMediaPlayer: (source: string, title: string)=>any;
+    openMediaPlayer: (source: string, title: string, index: number)=>any;
 };
 type IState = {
     datas: CategoriesGroups[];
@@ -73,7 +73,7 @@ export default class Categories extends Component<IProps, IState> {
         }
     }
 
-    _renderItemCard({ item }: ListRenderItemInfo<Channels>) {
+    _renderItemCard({ item, index }: ListRenderItemInfo<Channels>) {
         return(<CardItem
             key={item.id}
             title={item.title}
@@ -81,7 +81,7 @@ export default class Categories extends Component<IProps, IState> {
             numColumns={this.state.numColumns}
             isLoading={false}
             customWidth={(isTV)? (this.getWidth() / this.state.numColumns): undefined}
-            onPress={()=>this.props.openMediaPlayer(item.source, item.title)}
+            onPress={()=>this.props.openMediaPlayer(item.source, item.title, index)}
         />);
     }
 

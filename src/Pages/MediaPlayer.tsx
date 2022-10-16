@@ -9,7 +9,12 @@ import Video, { OnBufferData } from "react-native-video";
 import CustomModal from "../Components/CustomModal";
 import { Theme } from "../Scripts/Theme";
 
-type IProps = {};
+type IProps = {
+    index: number;
+    lenghtChannels: number;
+    nextChannel: ()=>any;
+    previousChannel: ()=>any;
+};
 type IState = {
     // Datas
     visible: boolean;
@@ -19,6 +24,7 @@ type IState = {
     paused: boolean;
     isLoading: 'flex' | 'none';
     showController: number;
+    showPip: boolean;
     width: number;
     isPipEnable: boolean;
 };
@@ -39,6 +45,7 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
             paused: true,
             isLoading: 'none',
             showController: 0,
+            showPip: false,
             width: Dimensions.get('window').width - 20,
             isPipEnable: false
         };
@@ -59,6 +66,7 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
         this.TVEvents.enable(this, this._showControls);
         this.eventDimensions = Dimensions.addEventListener('change', ({ window: { width } })=>this.setState({ width: width - 20 }));
         this.eventPip = PipHandler.onPipModeChanged((isEnable)=>this.setState({ isPipEnable: !!isEnable, showController: 0 }));
+        if (Platform.Version >= 26) this.setState({ showPip: true });
     }
     componentWillUnmount(): void {
         this.eventDimensions?.remove();
@@ -154,15 +162,14 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
                         <ActivityIndicator size={PixelRatio.roundToNearestPixel(64)} color={Theme.colors.primary} />
                     </View>
                     <ViewControls style={styles.viewController} opacity={this.state.showController}>
+                        <View style={styles.buttonContent}>
+                            <IconButton icon={'skip-previous'} style={styles.buttonPrevious} size={56} disabled={this.props.index <= 0} onPress={this.props.previousChannel} />
+                            <IconButton icon={'skip-next'} style={styles.buttonNext} size={56} disabled={this.props.index == this.props.lenghtChannels} onPress={this.props.nextChannel} />
+                        </View>
                         <View style={[styles.header, { width: this.state.width }]}>
-                            {/*<IconButton
-                                icon={'arrow-left'}
-                                size={28}
-                                onPress={this.goClose}
-                            />*/}
                             <BackButton onPress={this.goClose} />
                             <Text style={styles.title}>{this.state.title}</Text>
-                            {(!isTV)&&<IconButton icon={'picture-in-picture-bottom-right'} style={styles.pip_button} size={28} onPress={this._goPictureInPicture} />}
+                            {(!isTV && this.state.showPip)&&<IconButton icon={'picture-in-picture-bottom-right'} style={styles.pip_button} size={28} onPress={this._goPictureInPicture} />}
                         </View>
                     </ViewControls>
                 </View>
@@ -276,5 +283,21 @@ const styles = StyleSheet.create({
         right: 0,
         marginRight: 12,
         marginTop: 24
+    },
+    buttonContent: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        position: 'absolute'
+    },
+    buttonNext: {
+        position: 'absolute',
+        right: 0,
+        marginRight: 100
+    },
+    buttonPrevious: {
+        position: 'absolute',
+        left: 0,
+        marginLeft: 100
     }
 });

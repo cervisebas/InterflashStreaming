@@ -54,7 +54,7 @@ export default class Session extends Component<IProps, IState> {
         this.setState({ isLoading: true }, ()=>
             AccountAPI.login(this.state.formUserName, this.state.formPassword)
                 .then(()=>setTimeout(()=>{
-                    DeviceEventEmitter.emit('LoadNow');
+                    DeviceEventEmitter.emit('ReInitApp');
                     setTimeout(()=>this.setState({
                         visible: false,
                         isLoading: false

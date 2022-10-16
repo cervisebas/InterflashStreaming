@@ -3,7 +3,11 @@ import MediaPlayer from "./Pages/MediaPlayer";
 import ScreenLoading from "./Screens/ScreenLoading";
 import Session from "./Screens/Session";
 
-type IProps = {};
+type IProps = {
+    indexPlayer: number;
+    lenghtChannels: number;
+    changeChannel: (num: 1 | -1)=>any;
+};
 type IState = {};
 
 export default class Extends extends PureComponent<IProps, IState> {
@@ -31,7 +35,13 @@ export default class Extends extends PureComponent<IProps, IState> {
 
     render(): React.ReactNode {
         return(<>
-            <MediaPlayer ref={this.refMediaPlayer} />
+            <MediaPlayer
+                ref={this.refMediaPlayer}
+                index={this.props.indexPlayer}
+                lenghtChannels={this.props.lenghtChannels}
+                nextChannel={()=>this.props.changeChannel(1)}
+                previousChannel={()=>this.props.changeChannel(-1)}
+            />
             <ScreenLoading ref={this.refScreenLoading} />
             <Session ref={this.refSession} />
         </>);

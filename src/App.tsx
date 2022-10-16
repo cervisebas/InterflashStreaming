@@ -1,5 +1,5 @@
 import React, { Component, createRef } from "react";
-import { Platform, StatusBar, View } from "react-native";
+import { DeviceEventEmitter, EmitterSubscription, Platform, StatusBar, View } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Theme } from "./Scripts/Theme";
 import SystemNavigationBar from "react-native-system-navigation-bar";
@@ -13,6 +13,7 @@ import { Channels } from "./Scripts/ApiWisp/Types";
 
 type IProps = {};
 type IState = {
+    indexPlayer: number;
     channels: Channels[];
 };
 
@@ -21,18 +22,26 @@ export default class App extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
+            indexPlayer: -1,
             channels: []
         };
+        this.initApp = this.initApp.bind(this);
         this._openMediaPlayer = this._openMediaPlayer.bind(this);
+        this._changeChannel = this._changeChannel.bind(this);
     }
+    private eventInit: EmitterSubscription | undefined = undefined;
     // Ref's Components
     private refExtend = createRef<Extends>();
 
     componentDidMount(): void {
         this.initApp();
+        this.eventInit = DeviceEventEmitter.addListener('ReInitApp', this.initApp);
         SystemNavigationBar.setNavigationColor('#325981', 'light', 'navigation');
         if (!Platform.isTV) Orientation.lockToPortrait();
         console.log(`IsTV: ${Platform.isTV}`);
+    }
+    componentWillUnmount(): void {
+        this.eventInit?.remove();
     }
     async initApp() {
         this.refExtend.current?.showScreenLoading('Iniciando...');
@@ -67,21 +76,32 @@ export default class App extends Component<IProps, IState> {
             const { username, password } = await AccountAPI.getData();
             const channels = await getChannels.getAll(username, password, showProgress);
             this.setState({ channels });
-            this.refExtend.current?.updateScreenLoading(`¡Descarga completa!`)
+            this.refExtend.current?.updateScreenLoading(`¡Descarga completa!`);
             return true;
         } catch (error) {
             throw error;
         }
     }
-    _openMediaPlayer(source: string, title: string) {
+    _openMediaPlayer(source: string, title: string, index: number) {
+        this.setState({ indexPlayer: index });
         this.refExtend.current?.openMediaPlayer(source, title);
+    }
+    _changeChannel(num: 1 | -1) {
+        const index: number = this.state.indexPlayer + (num);
+        const { source, title } = this.state.channels[index];
+        this._openMediaPlayer(source, title, index);
     }
     render(): React.ReactNode {
         return(<View style={{ flex: 1 }}>
             <StatusBar backgroundColor={'#325981'} barStyle={'light-content'} />
             <PaperProvider theme={Theme}>
                 <Navigation channels={this.state.channels} opeMediaPlayer={this._openMediaPlayer} />
-                <Extends ref={this.refExtend} />
+                <Extends
+                    ref={this.refExtend}
+                    indexPlayer={this.state.indexPlayer}
+                    lenghtChannels={this.state.channels.length}
+                    changeChannel={this._changeChannel}
+                />
             </PaperProvider>
         </View>);
     }

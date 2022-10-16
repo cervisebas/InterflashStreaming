@@ -7,7 +7,7 @@ import { Channels } from "../Scripts/ApiWisp/Types";
 type IProps = {
     active: number;
     list: Channels[];
-    openMediaPlayer: (source: string, title: string)=>any;
+    openMediaPlayer: (source: string, title: string, index: number)=>any;
 };
 type IState = {
     numColumns: number;
@@ -67,14 +67,14 @@ export default class Home extends Component<IProps, IState> {
             }
         }
     }
-    _renderItem({ item }: ListRenderItemInfo<Channels>) {
+    _renderItem({ item, index }: ListRenderItemInfo<Channels>) {
         return(<CardItem
             key={item.id}
             title={item.title}
             source={item.image}
             numColumns={this.state.numColumns}
             isLoading={false}
-            onPress={()=>this.props.openMediaPlayer(item.source, item.title)}
+            onPress={()=>this.props.openMediaPlayer(item.source, item.title, index)}
         />);
     }
     _getItemLayout(_data: Channels[] | null | undefined, index: number) {

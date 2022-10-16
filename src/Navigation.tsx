@@ -5,12 +5,11 @@ import TabNavTv from "./Components/TabNavTv";
 import Account from "./Screens/Account";
 import Categories from "./Screens/Categories";
 import Home from "./Screens/Home";
-import Search from "./Screens/Search";
 import { Channels } from "./Scripts/ApiWisp/Types";
 
 type IProps = {
     channels: Channels[];
-    opeMediaPlayer: (source: string, title: string)=>any;
+    opeMediaPlayer: (source: string, title: string, index: number)=>any;
 };
 type IState = {
     index: number;
@@ -30,7 +29,7 @@ export default class Navigation extends PureComponent<IProps, IState> {
     private routers = [
         { key: 'home', title: (isTV)? 'Lista de canales': 'Inicio', focusedIcon: 'home', unfocusedIcon: 'home-outline'},
         { key: 'category', title: 'Categorías', focusedIcon: 'shape', unfocusedIcon: 'shape-outline' },
-        { key: 'search', title: 'Buscar', focusedIcon: 'magnify', unfocusedIcon: 'magnify' },
+        //{ key: 'search', title: 'Buscar', focusedIcon: 'magnify', unfocusedIcon: 'magnify' },
         { key: 'account', title: 'Cuenta', focusedIcon: 'account', unfocusedIcon: 'account-outline' }
     ];
     _onIndexChange(index: number) {
@@ -40,8 +39,6 @@ export default class Navigation extends PureComponent<IProps, IState> {
         switch (route.key) {
           case 'home':
             return <Home list={this.props.channels} active={this.state.index} openMediaPlayer={this.props.opeMediaPlayer} />;
-          case 'search':
-            return <Search />;
           case 'category':
             return <Categories list={this.props.channels} active={this.state.index} openMediaPlayer={this.props.opeMediaPlayer} />;
           case 'account':
