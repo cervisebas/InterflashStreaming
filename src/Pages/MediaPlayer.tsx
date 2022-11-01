@@ -14,6 +14,7 @@ type IProps = {
     lenghtChannels: number;
     nextChannel: ()=>any;
     previousChannel: ()=>any;
+    openListChannels: ()=>any;
 };
 type IState = {
     // Datas
@@ -57,13 +58,13 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
         this.goClose = this.goClose.bind(this);
         this._onEnd = this._onEnd.bind(this);
         this._onError = this._onError.bind(this);
+        this._goPictureInPicture = this._goPictureInPicture.bind(this);
+        this._openListChannels = this._openListChannels.bind(this);
     }
     private timeout: number = 0;
-    private TVEvents = new TVEventHandler();
     private eventDimensions: EmitterSubscription | undefined = undefined;
     private eventPip: EmitterSubscription | undefined = undefined;
     componentDidMount(): void {
-        this.TVEvents.enable(this, this._showControls);
         this.eventDimensions = Dimensions.addEventListener('change', ({ window: { width } })=>this.setState({ width: width - 20 }));
         this.eventPip = PipHandler.onPipModeChanged((isEnable)=>this.setState({ isPipEnable: !!isEnable, showController: 0 }));
         if (Platform.Version >= 26) this.setState({ showPip: true });
@@ -71,7 +72,6 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
     componentWillUnmount(): void {
         this.eventDimensions?.remove();
         this.eventPip?.remove();
-        this.TVEvents.disable();
     }
     close() {
         this.setState({
@@ -102,6 +102,9 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
             Orientation.lockToPortrait();
         }
     }
+    isHideControls() {
+        return this.state.showController == 0;
+    }
     showLoading({ isBuffering }: OnBufferData) {
         this.setState({ isLoading: (isBuffering)? 'flex': 'none' });
     }
@@ -119,6 +122,7 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
         this.setControls();
     }
     _goPictureInPicture() {
+        if (this.isHideControls()) return this._showControls();
         PipHandler.enterPipMode();
     }
     _onEnd() {
@@ -128,10 +132,15 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
         ToastAndroid.show('Ocurrió un error durante la reproducción.', ToastAndroid.LONG);
         this.close();
     }
+    _openListChannels() {
+        if (this.isHideControls()) return this._showControls();
+        this.props.openListChannels();
+    }
     goClose() {
-        if (isTV) return (this.state.showController == 1)? this.close(): this._showControls();
+        if (this.isHideControls()) return this._showControls();
         this.close();
     }
+
     render(): React.ReactNode {
         return(<CustomModal visible={this.state.visible} onClose={this.onClose} onRequestClose={this.goClose} animationIn={animationIn} animationOut={animationOut} animationInTiming={animationInTiming} animationOutTiming={animationOutTiming} statusBarTranslucent={true}>
             <Pressable style={styles.contain} onPress={this._showControls} focusable={!isTV}>
@@ -162,14 +171,15 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
                         <ActivityIndicator size={PixelRatio.roundToNearestPixel(64)} color={Theme.colors.primary} />
                     </View>
                     <ViewControls style={styles.viewController} opacity={this.state.showController}>
-                        <View style={styles.buttonContent}>
+                        {(!isTV)&&<View style={styles.buttonContent}>
                             <IconButton icon={'skip-previous'} style={styles.buttonPrevious} size={56} disabled={this.props.index <= 0} onPress={this.props.previousChannel} />
                             <IconButton icon={'skip-next'} style={styles.buttonNext} size={56} disabled={this.props.index == this.props.lenghtChannels} onPress={this.props.nextChannel} />
-                        </View>
+                        </View>}
                         <View style={[styles.header, { width: this.state.width }]}>
                             <BackButton onPress={this.goClose} />
                             <Text style={styles.title}>{this.state.title}</Text>
                             {(!isTV && this.state.showPip)&&<IconButton icon={'picture-in-picture-bottom-right'} style={styles.pip_button} size={28} onPress={this._goPictureInPicture} />}
+                            <IconButton icon={'playlist-play'} style={(this.state.showPip)? styles.list_button: styles.pip_button} size={28} disabled={isTV} onPress={this._openListChannels} />
                         </View>
                     </ViewControls>
                 </View>
@@ -282,6 +292,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         marginRight: 12,
+        marginTop: 24
+    },
+    list_button: {
+        position: 'absolute',
+        right: 0,
+        marginRight: 68,
         marginTop: 24
     },
     buttonContent: {

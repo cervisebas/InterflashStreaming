@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dimensions, EmitterSubscription, ScaledSize, StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { Dimensions, EmitterSubscription, Platform, ScaledSize, StyleProp, StyleSheet, ViewStyle } from "react-native";
 import Modal from "react-native-modal";
 
 type ExtractProps<TComponentOrTProps> = TComponentOrTProps extends React.Component<infer TProps, any> ? TProps : TComponentOrTProps;
@@ -19,12 +19,15 @@ type IProps = {
     transparent?: boolean;
     style?: StyleProp<ViewStyle>;
     statusBarTranslucent?: boolean;
+    alwaysBackdrop?: boolean;
     children?: React.ReactNode;
 };
 type IState = {
     width: number;
     height: number;
 };
+
+const isTV = Platform.isTV;
 
 export default class CustomModal extends Component<IProps, IState> {
     constructor(props: IProps) {
@@ -42,7 +45,7 @@ export default class CustomModal extends Component<IProps, IState> {
     private eventSize: EmitterSubscription | null = null;
     componentDidMount(): void {
         this._isMount = true;
-        const { width, height } = Dimensions.get('window');
+        const { width, height } = Dimensions.get('screen');
         //const height = DeviceDimensions.get('REAL_WINDOW_HEIGHT');
         this.eventSize = Dimensions.addEventListener('change', this._setSize);
         this.setState({ width, height });
@@ -70,12 +73,13 @@ export default class CustomModal extends Component<IProps, IState> {
             animationInTiming={(!this.props.animationInTiming)? 250: this.props.animationInTiming}
             animationOut={(this.props.animationOut)? this.props.animationOut: 'fadeOutDown'}
             animationOutTiming={(!this.props.animationOutTiming)? 250: this.props.animationOutTiming}
-            backdropOpacity={(this.props.transparent)? 0: undefined}
+            backdropOpacity={(this.props.transparent)? (!this.props.alwaysBackdrop)? 0: undefined: undefined}
             onBackButtonPress={this.onRequestClose}
             onBackdropPress={this.onRequestClose}
             onModalWillShow={this.onShow}
             onModalHide={this.onClose}
             useNativeDriver={true}
+            focusable={(isTV)? true: undefined}
             deviceWidth={this.state.width}
             deviceHeight={this.state.height}
             hardwareAccelerated={true}

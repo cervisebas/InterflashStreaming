@@ -1,5 +1,5 @@
 import React, { Component, createRef } from "react";
-import { DeviceEventEmitter, EmitterSubscription, Platform, StatusBar, View } from "react-native";
+import { DeviceEventEmitter, EmitterSubscription, HWEvent, Platform, StatusBar, TVEventHandler, View } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Theme } from "./Scripts/Theme";
 import SystemNavigationBar from "react-native-system-navigation-bar";
@@ -28,13 +28,16 @@ export default class App extends Component<IProps, IState> {
         this.initApp = this.initApp.bind(this);
         this._openMediaPlayer = this._openMediaPlayer.bind(this);
         this._changeChannel = this._changeChannel.bind(this);
+        this._eventsTV = this._eventsTV.bind(this);
     }
     private eventInit: EmitterSubscription | undefined = undefined;
+    private TVEvents = new TVEventHandler();
     // Ref's Components
     private refExtend = createRef<Extends>();
 
     componentDidMount(): void {
         this.initApp();
+        this.TVEvents.enable(this, this._eventsTV);
         this.eventInit = DeviceEventEmitter.addListener('ReInitApp', this.initApp);
         SystemNavigationBar.setNavigationColor('#325981', 'light', 'navigation');
         if (!Platform.isTV) Orientation.lockToPortrait();
@@ -42,6 +45,10 @@ export default class App extends Component<IProps, IState> {
     }
     componentWillUnmount(): void {
         this.eventInit?.remove();
+        this.TVEvents.disable();
+    }
+    _eventsTV(_component: this, data: HWEvent) {
+        this.refExtend.current?.refMediaPlayer.current?._showControls();
     }
     async initApp() {
         this.refExtend.current?.showScreenLoading('Iniciando...');
@@ -99,8 +106,9 @@ export default class App extends Component<IProps, IState> {
                 <Extends
                     ref={this.refExtend}
                     indexPlayer={this.state.indexPlayer}
-                    lenghtChannels={this.state.channels.length}
+                    channels={this.state.channels}
                     changeChannel={this._changeChannel}
+                    opeMediaPlayer={this._openMediaPlayer}
                 />
             </PaperProvider>
         </View>);
