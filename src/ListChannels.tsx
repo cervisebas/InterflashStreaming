@@ -8,6 +8,7 @@ import DeviceInfo from "react-native-device-info";
 
 type IProps = {
     channels: Channels[];
+    indexCurrent: number;
     changeChannel: (source: string, title: string, index: number)=>any;
 };
 type IState = {
@@ -41,9 +42,14 @@ export default class ListChannels extends PureComponent<IProps, IState> {
     _renderItem({ item, index }: ListRenderItemInfo<Channels>) {
         return(<List.Item
             title={item.title}
-            left={(props)=><List.Icon {...props} icon={'television'} />}
+            titleStyle={(this.props.indexCurrent == index)? { color: 'red' }: undefined}
+            left={(props)=><List.Icon
+                {...props}
+                color={(this.props.indexCurrent == index)? 'red': undefined}
+                icon={(this.props.indexCurrent == index)? 'television': 'play'}
+            />}
             style={styles.item}
-            onPress={()=>this.selectChannel(item.source, item.title, index)}
+            onPress={()=>(this.props.indexCurrent !== index)&&this.selectChannel(item.source, item.title, index)}
         />);
     }
     _ItemSeparatorComponent() {

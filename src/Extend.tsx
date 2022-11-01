@@ -54,6 +54,7 @@ export default class Extends extends PureComponent<IProps, IState> {
             <ListChannels
                 ref={this.refListChannels}
                 channels={this.props.channels}
+                indexCurrent={this.props.indexPlayer}
                 changeChannel={this.props.opeMediaPlayer}
             />
             <ScreenLoading ref={this.refScreenLoading} />
