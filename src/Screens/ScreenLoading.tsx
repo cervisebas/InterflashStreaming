@@ -4,10 +4,10 @@ import FastImage from 'react-native-fast-image';
 import { Provider as PaperProvider, Text } from 'react-native-paper';
 import CustomModal from '../Components/CustomModal';
 import { Theme } from '../Scripts/Theme';
+import Background from "../Assets/background-loading.webp";
+import Logo from "../Assets/logo.png";
 
-type IProps = {
-    
-};
+type IProps = {};
 type IState = {
     visible: boolean;
     showActivity: boolean;
@@ -43,9 +43,9 @@ export default class ScreenLoading extends Component<IProps, IState> {
     render(): React.ReactNode {
         return(<CustomModal visible={this.state.visible} animationIn={'fadeIn'} animationOutTiming={600} animationOut={'fadeOut'}>
             <PaperProvider theme={Theme}>
-                <ImageBackground source={require('../Assets/background-loading.webp')} resizeMode={'cover'} style={styles.imageBackground}>
+                <ImageBackground source={Background} resizeMode={'cover'} style={styles.imageBackground}>
                     <FastImage
-                        source={require('../Assets/logo.png')}
+                        source={Logo}
                         style={styles.logo}
                     />
                     <View style={styles.containLoading}>

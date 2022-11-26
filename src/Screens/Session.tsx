@@ -5,6 +5,9 @@ import CustomModal from "../Components/CustomModal";
 import CustomSnackbar from "../Components/CustomSnackbar";
 import { AccountAPI } from "../Scripts/ApiWisp";
 import { Theme } from "../Scripts/Theme";
+// Image
+import Backgroud from "../Assets/background-loading.webp";
+import BackgroundScreen from "../Components/BackgroundScreen";
 
 type IProps = {};
 type IState = {
@@ -112,8 +115,8 @@ export default class Session extends Component<IProps, IState> {
     render(): React.ReactNode {
         return(<CustomModal visible={this.state.visible} onClose={this.onClose} animationInTiming={0} animationOutTiming={0} animationIn={'fadeIn'} animationOut={'fadeOut'}>
             <View style={{ flex: 1 }}>
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                    <ImageBackground source={require('../Assets/background-loading.webp')} resizeMode="cover" style={styles.backgroundImage}>
+                <BackgroundScreen onActive={this.goFocus}>
+                    <ImageBackground source={Backgroud} resizeMode="cover" style={styles.backgroundImage}>
                         {(this.state.isLoading)&&<ProgressBar indeterminate style={styles.progressBar} color={'#FFFFFF'} />}
                         <View style={styles.content1}>
                             <View style={{ width: '100%', alignItems: 'center' }}>
@@ -179,7 +182,7 @@ export default class Session extends Component<IProps, IState> {
                         </View>
                         
                     </ImageBackground>
-                </TouchableWithoutFeedback>
+                </BackgroundScreen>
                 <CustomSnackbar ref={this.refCustomSnackbar} />
             </View>
         </CustomModal>);

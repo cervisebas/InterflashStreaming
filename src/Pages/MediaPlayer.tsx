@@ -1,5 +1,5 @@
 import React, { PureComponent, useEffect } from "react";
-import { ActivityIndicator, Dimensions, EmitterSubscription, PixelRatio, Platform, Pressable, StyleProp, StyleSheet, ToastAndroid, TVEventHandler, View, ViewStyle } from "react-native";
+import { ActivityIndicator, Dimensions, EmitterSubscription, HWEvent, PixelRatio, Platform, Pressable, StyleProp, StyleSheet, ToastAndroid, TVEventHandler, View, ViewStyle } from "react-native";
 import FullScreenChz from "react-native-fullscreen-chz";
 import Orientation from "react-native-orientation-locker";
 import { IconButton, Text } from "react-native-paper";
@@ -142,7 +142,7 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
     }
 
     render(): React.ReactNode {
-        return(<CustomModal visible={this.state.visible} onClose={this.onClose} onRequestClose={this.goClose} animationIn={animationIn} animationOut={animationOut} animationInTiming={animationInTiming} animationOutTiming={animationOutTiming} statusBarTranslucent={true}>
+        return(<CustomModal visible={this.state.visible} onClose={this.onClose} onRequestClose={this.goClose} animationIn={animationIn} animationOut={animationOut} animationInTiming={animationInTiming} animationOutTiming={animationOutTiming} statusBarTranslucent={true} coverScreen={!isTV}>
             <Pressable style={styles.contain} onPress={this._showControls} focusable={!isTV}>
                 <View style={styles.videoContain} focusable={false}>
                     <Video
@@ -166,6 +166,8 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
                             bufferForPlaybackMs: 2500,
                             bufferForPlaybackAfterRebufferMs: 5000
                         }}
+
+                        focusable={false}
                     />
                     <View style={[styles.loading, { display: this.state.isLoading }]}>
                         <ActivityIndicator size={PixelRatio.roundToNearestPixel(64)} color={Theme.colors.primary} />
@@ -179,7 +181,7 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
                             <BackButton onPress={this.goClose} />
                             <Text style={styles.title}>{this.state.title}</Text>
                             {(!isTV && this.state.showPip)&&<IconButton icon={'picture-in-picture-bottom-right'} style={styles.pip_button} size={28} onPress={this._goPictureInPicture} />}
-                            <IconButton icon={'playlist-play'} style={(this.state.showPip)? styles.list_button: styles.pip_button} size={28} disabled={isTV} onPress={this._openListChannels} />
+                            {(!isTV)&&<IconButton icon={'playlist-play'} style={(this.state.showPip)? styles.list_button: styles.pip_button} size={28} disabled={isTV} onPress={this._openListChannels} />}
                         </View>
                     </ViewControls>
                 </View>

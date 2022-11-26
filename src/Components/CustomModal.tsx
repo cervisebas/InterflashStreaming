@@ -20,6 +20,7 @@ type IProps = {
     style?: StyleProp<ViewStyle>;
     statusBarTranslucent?: boolean;
     alwaysBackdrop?: boolean;
+    coverScreen?: boolean;
     children?: React.ReactNode;
 };
 type IState = {
@@ -80,6 +81,9 @@ export default class CustomModal extends Component<IProps, IState> {
             onModalHide={this.onClose}
             useNativeDriver={true}
             focusable={(isTV)? true: undefined}
+            //hasBackdrop={this.props.coverScreen}
+            coverScreen={this.props.coverScreen}
+            //focusable={false}
             deviceWidth={this.state.width}
             deviceHeight={this.state.height}
             hardwareAccelerated={true}

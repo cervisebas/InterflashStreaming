@@ -38,7 +38,7 @@
     "react-native-paper": "5.0.0-rc.5",
     "react-native-ping": "^1.2.7",
     "react-native-pip-android": "^1.0.1",
-    "react-native-reanimated": "^2.10.0",
+    "react-native-reanimated": "^2.13.0",
     "react-native-skeleton-placeholder": "^5.0.0",
     "react-native-system-navigation-bar": "^2.0.0",
     "react-native-vector-icons": "^9.2.0",
