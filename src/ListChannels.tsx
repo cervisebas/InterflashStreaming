@@ -1,10 +1,11 @@
-import React, { PureComponent } from "react";
-import { Dimensions, FlatList, ListRenderItemInfo, StatusBar, StyleSheet, View } from "react-native";
-import { Divider, List, overlay } from "react-native-paper";
+import React, { createRef, PureComponent } from "react";
+import { FlatList, ListRenderItemInfo, StatusBar, StyleSheet, View } from "react-native";
+import { Divider, overlay } from "react-native-paper";
 import CustomModal from "./Components/CustomModal";
 import { Channels } from "./Scripts/ApiWisp/Types";
 import { Theme } from "./Scripts/Theme";
 import DeviceInfo from "react-native-device-info";
+import CustomItemList from "./Components/Elements/CustomItemList";
 
 type IProps = {
     channels: Channels[];
@@ -25,7 +26,10 @@ export default class ListChannels extends PureComponent<IProps, IState> {
         };
         this.close = this.close.bind(this);
         this._renderItem = this._renderItem.bind(this);
+        this.goFocus = this.goFocus.bind(this);
+        this.selectChannel = this.selectChannel.bind(this);
     }
+    private FlatListRef = createRef<FlatList<Channels>>();
 
     componentDidMount(): void {
         console.log(this.props.channels);
@@ -40,16 +44,12 @@ export default class ListChannels extends PureComponent<IProps, IState> {
 
     // Flatlist
     _renderItem({ item, index }: ListRenderItemInfo<Channels>) {
-        return(<List.Item
-            title={item.title}
-            titleStyle={(this.props.indexCurrent == index)? { color: 'red' }: undefined}
-            left={(props)=><List.Icon
-                {...props}
-                color={(this.props.indexCurrent == index)? 'red': undefined}
-                icon={(this.props.indexCurrent == index)? 'television': 'play'}
-            />}
-            style={styles.item}
-            onPress={()=>(this.props.indexCurrent !== index)&&this.selectChannel(item.source, item.title, index)}
+        return(<CustomItemList
+            key={`item-list-channels-${item.id}`}
+            index={index}
+            data={item}
+            isPlaying={this.props.indexCurrent == index}
+            onPress={this.selectChannel}
         />);
     }
     _ItemSeparatorComponent() {
@@ -61,6 +61,15 @@ export default class ListChannels extends PureComponent<IProps, IState> {
             offset: 56 * index,
             index
         };
+    }
+
+    goFocus() {
+        var index = 0;
+        this.props.channels.forEach((_value, i)=>((i == this.props.indexCurrent)&&(index = i)));
+        this.FlatListRef.current?.scrollToIndex({
+            animated: true,
+            index
+        });
     }
 
     // Controller
@@ -77,13 +86,15 @@ export default class ListChannels extends PureComponent<IProps, IState> {
     }
 
     render(): React.ReactNode {
-        return(<CustomModal visible={this.state.visible} statusBarTranslucent={true} onRequestClose={this.close} animationIn={'slideInLeft'} animationOut={'slideOutLeft'}>
+        return(<CustomModal visible={this.state.visible} statusBarTranslucent={true} onRequestClose={this.close} onShow={this.goFocus} animationIn={'slideInLeft'} animationOut={'slideOutLeft'}>
             <View style={[styles.content, { paddingLeft: this.state.paddingLeft }]}>
                 <FlatList
+                    ref={this.FlatListRef}
                     data={this.props.channels}
                     extraData={this.props}
                     renderItem={this._renderItem}
                     getItemLayout={this._getItemLayout}
+                    maxToRenderPerBatch={30}
                     ItemSeparatorComponent={this._ItemSeparatorComponent}
                 />
             </View>

@@ -117,7 +117,12 @@ const DrawerItem = ({
           { backgroundColor, borderRadius },
           isV3 && styles.v3Container,
           style,
-          (focus && !active)&&{ backgroundColor: color(theme.colors.primary).alpha(0.35).rgb().string() }
+          (focus && !active)? {
+            backgroundColor: color(theme.colors.primary).alpha(0.35).rgb().string()
+          }: (focus && active)? {
+            borderColor: '#FF0000',
+            borderWidth: 2
+          }: undefined
         ]}
         accessibilityRole="button"
         accessibilityState={{ selected: active }}

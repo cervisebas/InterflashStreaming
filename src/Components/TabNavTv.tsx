@@ -1,7 +1,10 @@
 import React, { PureComponent } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import FastImage from "react-native-fast-image";
 import { Theme } from "../Scripts/Theme";
 import Drawer from "./CustomDrawer";
+import ItemDrawerNavTV from "./Elements/ItemDrawerNavTV";
+import LogoNav from "./LogoNav";
 
 type CustomRoutes = {
     key: string;
@@ -24,17 +27,25 @@ export default class TabNavTv extends PureComponent<IProps, IState> {
     }
     _renderItems(values: CustomRoutes, index: number) {
         const active = index == this.props.index;
-        return(<Drawer.Item
+        return(<ItemDrawerNavTV
+            key={values.key}
+            index={index}
+            data={values}
+            active={active}
+            onPress={this.props.onChange}
+        />);
+        /*return(<Drawer.Item
             key={values.key}
             style={styles.drawer}
             active={active}
             icon={(active)? values.focusedIcon: values.unfocusedIcon}
             label={values.title}
             onPress={()=>this.props.onChange(index)}
-        />);
+        />);*/
     }
     render(): React.ReactNode {
         return(<View style={styles.content}>
+            <LogoNav />
             <ScrollView style={styles.scrollView}>
                 {this.props.routes.map(this._renderItems)}
             </ScrollView>
@@ -62,10 +73,5 @@ const styles = StyleSheet.create({
     scrollView: {
         flex: 2,
         flexDirection: 'column'
-    },
-    drawer: {
-        marginLeft: 12,
-        marginRight: 12,
-        marginTop: 10
     }
 });
