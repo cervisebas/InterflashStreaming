@@ -19,7 +19,8 @@ export default memo(React.forwardRef(function ListChannelsComponent(props: IProp
     function goFocus() {
         refFlatList.current?.scrollToIndex({
             animated: true,
-            index: props.indexCurrent
+            index: props.indexCurrent,
+            viewPosition: 0
         });
     }
 
