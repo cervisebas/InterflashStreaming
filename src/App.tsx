@@ -47,7 +47,7 @@ export default class App extends Component<IProps, IState> {
         this.eventInit?.remove();
         this.TVEvents.disable();
     }
-    _eventsTV(_component: this, data: HWEvent) {
+    async _eventsTV(_component: this, data: HWEvent) {
         if (data.eventKeyAction == -1) return;
         if (this.refExtend.current?.refMediaPlayer.current?.state.visible) {
             if (data.eventType == 'menu') return this.refExtend.current?.openListChannels();

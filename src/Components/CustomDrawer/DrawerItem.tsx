@@ -120,8 +120,7 @@ const DrawerItem = ({
           (focus && !active)? {
             backgroundColor: color(theme.colors.primary).alpha(0.35).rgb().string()
           }: (focus && active)? {
-            borderColor: '#FF0000',
-            borderWidth: 2
+            backgroundColor: color(theme.colors.primary).darken(0.2).alpha(0.4).rgb().string()
           }: undefined
         ]}
         accessibilityRole="button"

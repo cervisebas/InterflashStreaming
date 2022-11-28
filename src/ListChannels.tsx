@@ -6,6 +6,7 @@ import { Channels } from "./Scripts/ApiWisp/Types";
 import { Theme } from "./Scripts/Theme";
 import DeviceInfo from "react-native-device-info";
 import CustomItemList from "./Components/Elements/CustomItemList";
+import ListChannelsComponent, { RefListChannelsComponent } from "./ListChannelsComponent";
 
 type IProps = {
     channels: Channels[];
@@ -25,14 +26,12 @@ export default class ListChannels extends PureComponent<IProps, IState> {
             paddingLeft: 0
         };
         this.close = this.close.bind(this);
-        this._renderItem = this._renderItem.bind(this);
         this.goFocus = this.goFocus.bind(this);
         this.selectChannel = this.selectChannel.bind(this);
     }
-    private FlatListRef = createRef<FlatList<Channels>>();
+    private refListChannelsComponent = createRef<RefListChannelsComponent>();
 
     componentDidMount(): void {
-        console.log(this.props.channels);
         if (DeviceInfo.hasNotch()) this.setState({
             paddingLeft: ((StatusBar.currentHeight)? StatusBar.currentHeight: 0)
         });
@@ -42,34 +41,8 @@ export default class ListChannels extends PureComponent<IProps, IState> {
         this.close();
     }
 
-    // Flatlist
-    _renderItem({ item, index }: ListRenderItemInfo<Channels>) {
-        return(<CustomItemList
-            key={`item-list-channels-${item.id}`}
-            index={index}
-            data={item}
-            isPlaying={this.props.indexCurrent == index}
-            onPress={this.selectChannel}
-        />);
-    }
-    _ItemSeparatorComponent() {
-        return(<Divider />);
-    }
-    _getItemLayout(_data: Channels[] | null | undefined, index: number) {
-        return {
-            length: 56,
-            offset: 56 * index,
-            index
-        };
-    }
-
     goFocus() {
-        var index = 0;
-        this.props.channels.forEach((_value, i)=>((i == this.props.indexCurrent)&&(index = i)));
-        this.FlatListRef.current?.scrollToIndex({
-            animated: true,
-            index
-        });
+        this.refListChannelsComponent.current?.goFocus();
     }
 
     // Controller
@@ -88,7 +61,7 @@ export default class ListChannels extends PureComponent<IProps, IState> {
     render(): React.ReactNode {
         return(<CustomModal visible={this.state.visible} statusBarTranslucent={true} onRequestClose={this.close} onShow={this.goFocus} animationIn={'slideInLeft'} animationOut={'slideOutLeft'}>
             <View style={[styles.content, { paddingLeft: this.state.paddingLeft }]}>
-                <FlatList
+                {/*<FlatList
                     ref={this.FlatListRef}
                     data={this.props.channels}
                     extraData={this.props}
@@ -96,6 +69,12 @@ export default class ListChannels extends PureComponent<IProps, IState> {
                     getItemLayout={this._getItemLayout}
                     maxToRenderPerBatch={30}
                     ItemSeparatorComponent={this._ItemSeparatorComponent}
+                />*/}
+                <ListChannelsComponent
+                    ref={this.refListChannelsComponent}
+                    channels={this.props.channels}
+                    indexCurrent={this.props.indexCurrent}
+                    selectChannel={this.selectChannel}
                 />
             </View>
         </CustomModal>);
@@ -115,8 +94,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5
-    },
-    item: {
-        height: 56
     }
 });
