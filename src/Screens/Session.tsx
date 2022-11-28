@@ -1,12 +1,10 @@
 import React, { Component, createRef, PureComponent } from "react";
-import { ImageBackground, Keyboard, StyleProp, TouchableWithoutFeedback, View, ViewStyle, TextInput as NativeTextInput, StyleSheet, DeviceEventEmitter } from "react-native";
+import { StyleProp, View, ViewStyle, TextInput as NativeTextInput, StyleSheet, DeviceEventEmitter } from "react-native";
 import { Text, TextInput, Button, ProgressBar } from "react-native-paper";
 import CustomModal from "../Components/CustomModal";
 import CustomSnackbar from "../Components/CustomSnackbar";
 import { AccountAPI } from "../Scripts/ApiWisp";
 import { Theme } from "../Scripts/Theme";
-// Image
-import Backgroud from "../Assets/background-loading.webp";
 import BackgroundScreen from "../Components/BackgroundScreen";
 import LinearGradient from "react-native-linear-gradient";
 
@@ -117,7 +115,6 @@ export default class Session extends Component<IProps, IState> {
         return(<CustomModal visible={this.state.visible} onClose={this.onClose} animationInTiming={0} animationOutTiming={0} animationIn={'fadeIn'} animationOut={'fadeOut'} style={styles.backgroud}>
             <View style={{ flex: 1 }}>
                 <BackgroundScreen onActive={this.goFocus}>
-                    {/*<ImageBackground source={Backgroud} resizeMode="cover" style={styles.backgroundImage}>*/}
                     <LinearGradient colors={['rgba(0, 0, 0, 0)', 'rgba(50, 89, 129, 1)']} style={styles.gradient}>
                         {(this.state.isLoading)&&<ProgressBar indeterminate style={styles.progressBar} color={'#FFFFFF'} />}
                         <View style={styles.content1}>

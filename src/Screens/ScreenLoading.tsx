@@ -4,7 +4,7 @@ import FastImage from 'react-native-fast-image';
 import { Provider as PaperProvider, Text } from 'react-native-paper';
 import CustomModal from '../Components/CustomModal';
 import { Theme } from '../Scripts/Theme';
-import Logo from "../Assets/logo.png";
+import Logo from "../Assets/logo.webp";
 import LinearGradient from 'react-native-linear-gradient';
 
 type IProps = {};
