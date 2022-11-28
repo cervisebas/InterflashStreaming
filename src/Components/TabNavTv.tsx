@@ -1,8 +1,8 @@
+import Color from "color";
 import React, { PureComponent } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import FastImage from "react-native-fast-image";
+import { Text } from "react-native-paper";
 import { Theme } from "../Scripts/Theme";
-import Drawer from "./CustomDrawer";
 import ItemDrawerNavTV from "./Elements/ItemDrawerNavTV";
 import LogoNav from "./LogoNav";
 
@@ -34,14 +34,6 @@ export default class TabNavTv extends PureComponent<IProps, IState> {
             active={active}
             onPress={this.props.onChange}
         />);
-        /*return(<Drawer.Item
-            key={values.key}
-            style={styles.drawer}
-            active={active}
-            icon={(active)? values.focusedIcon: values.unfocusedIcon}
-            label={values.title}
-            onPress={()=>this.props.onChange(index)}
-        />);*/
     }
     render(): React.ReactNode {
         return(<View style={styles.content}>
@@ -49,6 +41,10 @@ export default class TabNavTv extends PureComponent<IProps, IState> {
             <ScrollView style={styles.scrollView}>
                 {this.props.routes.map(this._renderItems)}
             </ScrollView>
+            <View style={styles.brandContent}>
+                <Text style={[styles.textSubBrand, { color: Color('#FFFFFF').alpha(0.54).rgb().string() }]}>from</Text>
+                <Text style={styles.textBrand}>SCAPPS</Text>
+            </View>
         </View>);
     }
 }
@@ -73,5 +69,23 @@ const styles = StyleSheet.create({
     scrollView: {
         flex: 2,
         flexDirection: 'column'
+    },
+    textSubBrand: {
+        fontWeight: 'normal',
+        fontSize: 15
+    },
+    textBrand: {
+        color: '#FF2E2E',
+        fontSize: 20,
+        fontFamily: 'Organetto-Bold'
+    },
+    brandContent: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        left: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 20
     }
 });

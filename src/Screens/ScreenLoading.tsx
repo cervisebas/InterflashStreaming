@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, View, ImageBackground, StyleSheet, PixelRatio, Platform } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, PixelRatio, Platform } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Provider as PaperProvider, Text } from 'react-native-paper';
 import CustomModal from '../Components/CustomModal';
 import { Theme } from '../Scripts/Theme';
-import Background from "../Assets/background-loading.webp";
 import Logo from "../Assets/logo.png";
+import LinearGradient from 'react-native-linear-gradient';
 
 type IProps = {};
 type IState = {
@@ -21,7 +21,7 @@ export default class ScreenLoading extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            visible: false,
+            visible: true,
             showActivity: true,
             showMessage: false,
             message: ''
@@ -41,9 +41,9 @@ export default class ScreenLoading extends Component<IProps, IState> {
         this.setState({ showMessage: true, message, showActivity: !hideActivity });
     }
     render(): React.ReactNode {
-        return(<CustomModal visible={this.state.visible} animationIn={'fadeIn'} animationOutTiming={600} animationOut={'fadeOut'}>
+        return(<CustomModal visible={this.state.visible} animationIn={'fadeIn'} animationOutTiming={600} animationOut={'fadeOut'} style={styles.background}>
             <PaperProvider theme={Theme}>
-                <ImageBackground source={Background} resizeMode={'cover'} style={styles.imageBackground}>
+                <LinearGradient colors={['rgba(0, 0, 0, 0)', 'rgba(63, 112, 132, 1)']} style={styles.gradient}>
                     <FastImage
                         source={Logo}
                         style={styles.logo}
@@ -52,24 +52,33 @@ export default class ScreenLoading extends Component<IProps, IState> {
                         {(this.state.showActivity)&&<ActivityIndicator size={PixelRatio.getPixelSizeForLayoutSize(30)} animating={true} color={'#EEEEEE'} />}
                         {(this.state.showMessage)&&<Text style={styles.message}>{this.state.message}</Text>}
                     </View>
-                </ImageBackground>
+                </LinearGradient>
             </PaperProvider>
         </CustomModal>);
     }
 }
 
 const styles = StyleSheet.create({
+    background: {
+        backgroundColor: '#000000'
+    },
     logo: {
         width: 173.11,
         height: 250,
         marginTop: -100
     },
-    imageBackground: {
+    gradient: {
+        position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: 2
+    },
+    /*imageBackground: {
         flex: 1,
         backgroundColor: Theme.colors.background,
         alignItems: 'center',
         justifyContent: 'center'
-    },
+    },*/
     containLoading: {
         position: 'absolute',
         bottom: 0,
