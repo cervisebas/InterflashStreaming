@@ -73,7 +73,12 @@ export default class Categories extends Component<IProps, IState> {
         }
     }
 
-    _renderItemCard({ item, index }: ListRenderItemInfo<Channels>) {
+    openMediaPlayer(id: string, source: string, title: string) {
+        const findIndex = this.props.list.findIndex((v)=>v.id == id);
+        this.props.openMediaPlayer(source, title, findIndex);
+    }
+
+    _renderItemCard({ item }: ListRenderItemInfo<Channels>) {
         return(<CardItem
             key={item.id}
             title={item.title}
@@ -81,7 +86,7 @@ export default class Categories extends Component<IProps, IState> {
             numColumns={this.state.numColumns}
             isLoading={false}
             customWidth={(isTV)? (this.getWidth() / this.state.numColumns): undefined}
-            onPress={()=>this.props.openMediaPlayer(item.source, item.title, index)}
+            onPress={()=>this.openMediaPlayer(item.id, item.source, item.title)}
         />);
     }
 
