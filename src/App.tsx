@@ -54,6 +54,14 @@ export default class App extends Component<IProps, IState> {
         if (data.eventKeyAction == -1) return;
         if (this.refExtend.current?.refMediaPlayer.current?.state.visible) {
             if (data.eventType == 'menu') return this.refExtend.current?.openListChannels();
+            if (data.eventType == 'down') {
+                this.refExtend.current?.refMediaPlayer.current.setStateControls(true, 4000);
+                return this._changeChannel(-1);
+            }
+            if (data.eventType == 'up') {
+                this.refExtend.current?.refMediaPlayer.current.setStateControls(true, 4000);
+                return this._changeChannel(1);
+            }
             this.refExtend.current?.refMediaPlayer.current?._showControls();
         }
     }

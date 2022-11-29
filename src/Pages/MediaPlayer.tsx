@@ -116,6 +116,12 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
         this.setState({ showController: 1 });
         this.timeout = setTimeout(()=>this.setControls(true), 3500);
     }
+    setStateControls(show: boolean, time?: number) {
+        clearTimeout(this.timeout);
+        if (show == false) return this.setState({ showController: 0 });
+        this.setState({ showController: 1 });
+        this.timeout = setTimeout(()=>this.setControls(true), (time)? time: 3500);
+    }
     _showControls() {
         if (this.state.showController == 1) {
             this.setControls(true);
