@@ -60,6 +60,8 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
         this._onError = this._onError.bind(this);
         this._goPictureInPicture = this._goPictureInPicture.bind(this);
         this._openListChannels = this._openListChannels.bind(this);
+        this._previousChannel = this._previousChannel.bind(this);
+        this._nextChannel = this._nextChannel.bind(this);
     }
     private timeout: number = 0;
     private eventDimensions: EmitterSubscription | undefined = undefined;
@@ -141,6 +143,15 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
         this.close();
     }
 
+    _previousChannel() {
+        if (this.isHideControls()) return this._showControls();
+        this.props.previousChannel();
+    }
+    _nextChannel() {
+        if (this.isHideControls()) return this._showControls();
+        this.props.nextChannel();
+    }
+
     render(): React.ReactNode {
         return(<CustomModal visible={this.state.visible} onClose={this.onClose} onRequestClose={this.goClose} animationIn={animationIn} animationOut={animationOut} animationInTiming={animationInTiming} animationOutTiming={animationOutTiming} statusBarTranslucent={true} coverScreen={!isTV}>
             <Pressable style={styles.contain} onPress={this._showControls} focusable={!isTV}>
@@ -174,14 +185,40 @@ export default class MediaPlayer extends PureComponent<IProps, IState> {
                     </View>
                     <ViewControls style={styles.viewController} opacity={this.state.showController}>
                         {(!isTV)&&<View style={styles.buttonContent}>
-                            <IconButton icon={'skip-previous'} style={styles.buttonPrevious} size={56} disabled={this.props.index <= 0} onPress={this.props.previousChannel} />
-                            <IconButton icon={'skip-next'} style={styles.buttonNext} size={56} disabled={this.props.index == this.props.lenghtChannels} onPress={this.props.nextChannel} />
+                            <IconButton
+                                icon={'skip-previous'}
+                                style={styles.buttonPrevious}
+                                size={56}
+                                disabled={this.props.index <= 0}
+                                borderless={Platform.Version > 25}
+                                onPress={this._previousChannel}
+                            />
+                            <IconButton
+                                icon={'skip-next'}
+                                style={styles.buttonNext}
+                                size={56}
+                                disabled={this.props.index == this.props.lenghtChannels}
+                                borderless={Platform.Version > 25}
+                                onPress={this._nextChannel}
+                            />
                         </View>}
                         <View style={[styles.header, { width: this.state.width }]}>
                             <BackButton onPress={this.goClose} />
                             <Text style={styles.title}>{this.state.title}</Text>
-                            {(!isTV && this.state.showPip)&&<IconButton icon={'picture-in-picture-bottom-right'} style={styles.pip_button} size={28} onPress={this._goPictureInPicture} />}
-                            {(!isTV)&&<IconButton icon={'playlist-play'} style={(this.state.showPip)? styles.list_button: styles.pip_button} size={28} disabled={isTV} onPress={this._openListChannels} />}
+                            {(!isTV && this.state.showPip)&&<IconButton
+                                icon={'picture-in-picture-bottom-right'}
+                                style={styles.pip_button}
+                                size={28}
+                                borderless={Platform.Version > 25}
+                                onPress={this._goPictureInPicture}
+                            />}
+                            {(!isTV)&&<IconButton
+                                icon={'playlist-play'}
+                                style={(this.state.showPip)? styles.list_button: styles.pip_button}
+                                size={28}
+                                borderless={Platform.Version > 25}
+                                onPress={this._openListChannels}
+                            />}
                         </View>
                     </ViewControls>
                 </View>

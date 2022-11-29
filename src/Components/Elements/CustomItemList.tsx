@@ -34,6 +34,7 @@ export default class CustomItemList extends PureComponent<IProps, IState> {
             />}
             style={styles.item}
             rippleColor={(isTV)? 'rgba(50, 89, 129, 1)': undefined}
+            borderless={Platform.Version > 25}
             onPress={this._onPress}
         />);
     }
