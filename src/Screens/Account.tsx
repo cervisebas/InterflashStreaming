@@ -1,10 +1,14 @@
-import React, { Component } from "react";
-import { Platform, ScrollView, StyleSheet, View } from "react-native";
+import React, { Component, createRef } from "react";
+import { DeviceEventEmitter, Platform, ScrollView, StyleSheet, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import { Appbar, Button, Divider, List, Text } from "react-native-paper";
 import { AccountData } from "../Scripts/ApiWisp/Types";
 import AccountImage from "../Assets/account.webp";
+import AlertLogOut, { RefAlertLogOut } from "../Components/AlertLogOut";
 import moment from "moment";
+import LoadingComponent from "../Components/LoadingComponent";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { waitTo } from "../Scripts/Utils";
 
 type IProps = {
     userData: AccountData;
@@ -16,9 +20,32 @@ const isTV = Platform.isTV;
 export default class Account extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
+        this.logOut = this.logOut.bind(this);
+        this.logOutNow = this.logOutNow.bind(this);
     }
+    private refAlertLogOut = createRef<RefAlertLogOut>();
+    private refLoadingComponent = createRef<LoadingComponent>();
+
+    logOut() {
+        if (!isTV) return this.refAlertLogOut.current?.open();
+        this.logOutNow();
+    }
+    async logOutNow() {
+        this.refLoadingComponent.current?.open('Cerrando sesión...');
+        await AsyncStorage.removeItem('Session');
+        await waitTo(1000);
+        this.refLoadingComponent.current?.open('Reiniciando la aplicación...');
+        await waitTo(1000);
+        DeviceEventEmitter.emit('ReInitApp');
+        await waitTo(300);
+        DeviceEventEmitter.emit('reIntegrateNavigation');
+        this.refLoadingComponent.current?.close();
+    }
+
     componentDidMount(): void {
+        
     }
+
     render(): React.ReactNode {
         return(<View style={{ flex: 1 }}>
             {(!isTV)&&<Appbar.Header>
@@ -75,10 +102,12 @@ export default class Account extends Component<IProps, IState> {
                         mode={'contained'}
                         focusable={true}
                         style={{ width: '80%' }}
-                        onPress={()=>console.log('Click!')}
+                        onPress={this.logOut}
                     >Cerrar sesión</Button>
                 </View>
             </ScrollView>
+            <AlertLogOut ref={this.refAlertLogOut} onAccept={this.logOutNow} />
+            <LoadingComponent ref={this.refLoadingComponent} />
         </View>);
     }
 }

@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Platform, Route, StyleSheet, View } from "react-native";
+import { DeviceEventEmitter, EmitterSubscription, Platform, Route, StyleSheet, View } from "react-native";
 import { BottomNavigation } from "react-native-paper";
 import TabNavTv from "./Components/TabNavTv";
 import Account from "./Screens/Account";
@@ -27,12 +27,19 @@ export default class Navigation extends PureComponent<IProps, IState> {
         this._onIndexChange = this._onIndexChange.bind(this);
         this._renderScene = this._renderScene.bind(this);
     }
+    private event: EmitterSubscription | undefined = undefined;
     private routers = [
         { key: 'home', title: (isTV)? 'Lista de canales': 'Inicio', focusedIcon: 'home', unfocusedIcon: 'home-outline'},
         { key: 'category', title: 'Categorías', focusedIcon: 'shape', unfocusedIcon: 'shape-outline' },
         //{ key: 'search', title: 'Buscar', focusedIcon: 'magnify', unfocusedIcon: 'magnify' },
         { key: 'account', title: 'Cuenta', focusedIcon: 'account', unfocusedIcon: 'account-outline' }
     ];
+    componentDidMount(): void {
+        this.event = DeviceEventEmitter.addListener('reIntegrateNavigation', ()=>this.setState({ index: 0 }));
+    }
+    componentWillUnmount(): void {
+        this.event?.remove();
+    }
     _onIndexChange(index: number) {
         this.setState({ index });
     }
