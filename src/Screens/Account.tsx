@@ -41,11 +41,6 @@ export default class Account extends Component<IProps, IState> {
         DeviceEventEmitter.emit('reIntegrateNavigation');
         this.refLoadingComponent.current?.close();
     }
-
-    componentDidMount(): void {
-        
-    }
-
     render(): React.ReactNode {
         return(<View style={{ flex: 1 }}>
             {(!isTV)&&<Appbar.Header>

@@ -43,7 +43,7 @@ export default class ScreenLoading extends Component<IProps, IState> {
     render(): React.ReactNode {
         return(<CustomModal visible={this.state.visible} animationIn={'fadeIn'} animationOutTiming={600} animationOut={'fadeOut'} style={styles.background}>
             <PaperProvider theme={Theme}>
-                <LinearGradient colors={['rgba(0, 0, 0, 0)', 'rgba(50, 89, 129, 1)']} style={styles.gradient}>
+                <LinearGradient colors={['rgba(0, 0, 0, 0)', 'rgba(63, 112, 162, 1)']} style={styles.gradient}>
                     <FastImage
                         source={Logo}
                         style={styles.logo}

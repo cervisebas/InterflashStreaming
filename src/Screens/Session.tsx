@@ -113,73 +113,75 @@ export default class Session extends Component<IProps, IState> {
 
     render(): React.ReactNode {
         return(<CustomModal visible={this.state.visible} onClose={this.onClose} animationInTiming={0} animationOutTiming={0} animationIn={'fadeIn'} animationOut={'fadeOut'} style={styles.backgroud}>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, position: 'relative' }}>
                 <BackgroundScreen onActive={this.goFocus}>
-                    <LinearGradient colors={['rgba(0, 0, 0, 0)', 'rgba(50, 89, 129, 1)']} style={styles.gradient}>
+                    <>
                         {(this.state.isLoading)&&<ProgressBar indeterminate style={styles.progressBar} color={'#FFFFFF'} />}
-                        <View style={styles.content1}>
-                            <View style={{ width: '100%', alignItems: 'center' }}>
-                                <CustomTitle />
-                                <View style={styles.content3} onLayout={this.goFocus}>
-                                    <TextInput
-                                        label={'Nombre de usuario'}
-                                        mode={'flat'}
-                                        autoCapitalize={'none'}
-                                        secureTextEntry={false}
-                                        keyboardType={'email-address'}
-                                        autoComplete={'off'}
-                                        autoCorrect={false}
-                                        textContentType={'username'}
-                                        blurOnSubmit={false}
-                                        value={this.state.formUserName}
-                                        error={this.state.formErrorUserName}
-                                        disabled={this.state.isLoading}
-                                        render={(props)=><NativeTextInput {...props} ref={this.input1} />}
-                                        onChangeText={(text)=>this.setState({ formUserName: text, formErrorUserName: false })}
-                                        returnKeyType={'next'}
-                                        onSubmitEditing={()=>this.input2.current?.focus()}
-                                    />
-                                    <TextInput
-                                        label={'Contraseña'}
-                                        mode={'flat'}
-                                        autoCapitalize={'none'}
-                                        secureTextEntry={this.state.stateTextInputPassword}
-                                        autoComplete={'off'}
-                                        autoCorrect={false}
-                                        textContentType={'password'}
-                                        style={{ marginTop: 8 }}
-                                        value={this.state.formPassword}
-                                        error={this.state.formErrorPassword}
-                                        disabled={this.state.isLoading}
-                                        render={(props)=><NativeTextInput {...props} ref={this.input2} />}
-                                        onChangeText={(text)=>this.setState({ formPassword: text, formErrorPassword: false })}
-                                        returnKeyType={'send'}
-                                        onSubmitEditing={this.logInNow}
-                                        onFocus={()=>this.setState({ showIconTextInputPassword: true })}
-                                        onBlur={()=>this.setState({ showIconTextInputPassword: false, stateTextInputPassword: true, iconTextInputPassword: 'eye-outline' })}
-                                        right={(this.state.showIconTextInputPassword)&&<TextInput.Icon
-                                            icon={this.state.iconTextInputPassword}
-                                            onPress={()=>{
-                                                var state: boolean = this.state.stateTextInputPassword;
-                                                this.setState({
-                                                    stateTextInputPassword: !state,
-                                                    iconTextInputPassword: (state)? 'eye-off-outline': 'eye-outline'
-                                                });
-                                            }}
-                                        />}
-                                    />
-                                    <View style={{ width: '100%', alignItems: 'center', marginTop: 16 }}>
-                                        <Button
-                                            mode={'contained'}
-                                            onPress={this.logInNow}
-                                            style={{ width: '50%' }}
+                        <LinearGradient colors={['rgba(0, 0, 0, 0)', 'rgba(63, 112, 162, 1)']} style={styles.gradient}>
+                            <View style={styles.content1}>
+                                <View style={{ width: '100%', alignItems: 'center' }}>
+                                    <CustomTitle />
+                                    <View style={styles.content3} onLayout={this.goFocus}>
+                                        <TextInput
+                                            label={'Nombre de usuario'}
+                                            mode={'flat'}
+                                            autoCapitalize={'none'}
+                                            secureTextEntry={false}
+                                            keyboardType={'email-address'}
+                                            autoComplete={'off'}
+                                            autoCorrect={false}
+                                            textContentType={'username'}
+                                            blurOnSubmit={false}
+                                            value={this.state.formUserName}
+                                            error={this.state.formErrorUserName}
                                             disabled={this.state.isLoading}
-                                        >Iniciar sesión</Button>
+                                            render={(props)=><NativeTextInput {...props} ref={this.input1} />}
+                                            onChangeText={(text)=>this.setState({ formUserName: text, formErrorUserName: false })}
+                                            returnKeyType={'next'}
+                                            onSubmitEditing={()=>this.input2.current?.focus()}
+                                        />
+                                        <TextInput
+                                            label={'Contraseña'}
+                                            mode={'flat'}
+                                            autoCapitalize={'none'}
+                                            secureTextEntry={this.state.stateTextInputPassword}
+                                            autoComplete={'off'}
+                                            autoCorrect={false}
+                                            textContentType={'password'}
+                                            style={{ marginTop: 8 }}
+                                            value={this.state.formPassword}
+                                            error={this.state.formErrorPassword}
+                                            disabled={this.state.isLoading}
+                                            render={(props)=><NativeTextInput {...props} ref={this.input2} />}
+                                            onChangeText={(text)=>this.setState({ formPassword: text, formErrorPassword: false })}
+                                            returnKeyType={'send'}
+                                            onSubmitEditing={this.logInNow}
+                                            onFocus={()=>this.setState({ showIconTextInputPassword: true })}
+                                            onBlur={()=>this.setState({ showIconTextInputPassword: false, stateTextInputPassword: true, iconTextInputPassword: 'eye-outline' })}
+                                            right={(this.state.showIconTextInputPassword)&&<TextInput.Icon
+                                                icon={this.state.iconTextInputPassword}
+                                                onPress={()=>{
+                                                    var state: boolean = this.state.stateTextInputPassword;
+                                                    this.setState({
+                                                        stateTextInputPassword: !state,
+                                                        iconTextInputPassword: (state)? 'eye-off-outline': 'eye-outline'
+                                                    });
+                                                }}
+                                            />}
+                                        />
+                                        <View style={{ width: '100%', alignItems: 'center', marginTop: 16 }}>
+                                            <Button
+                                                mode={'contained'}
+                                                onPress={this.logInNow}
+                                                style={{ width: '50%' }}
+                                                disabled={this.state.isLoading}
+                                            >Iniciar sesión</Button>
+                                        </View>
                                     </View>
                                 </View>
                             </View>
-                        </View>
-                    </LinearGradient>
+                        </LinearGradient>
+                    </>
                 </BackgroundScreen>
                 <CustomSnackbar ref={this.refCustomSnackbar} />
             </View>
