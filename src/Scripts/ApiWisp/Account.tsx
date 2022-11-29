@@ -21,8 +21,8 @@ export default class AccountSystem {
                             status: (user_info.status == 'Active'),
                             isTrial: (user_info.is_trial == '1'),
                             maxConnections: parseInt(user_info.max_connections),
-                            expDate: (user_info.exp_date)? new Date(parseInt(user_info.exp_date)): null,
-                            createDate: new Date(parseInt(user_info.created_at))
+                            expDate: (user_info.exp_date)? new Date((parseInt(user_info.exp_date) * 1000)): null,
+                            createDate: new Date((parseInt(user_info.created_at) * 1000))
                         });
                     }
                     reject(ErrorSession);
@@ -45,8 +45,8 @@ export default class AccountSystem {
                             status: (user_info.status == 'Active'),
                             isTrial: (user_info.is_trial == '1'),
                             maxConnections: parseInt(user_info.max_connections),
-                            expDate: (user_info.exp_date)? new Date(parseInt(user_info.exp_date)): null,
-                            createDate: new Date(parseInt(user_info.created_at))
+                            expDate: (user_info.exp_date)? new Date((parseInt(user_info.exp_date) * 1000)): null,
+                            createDate: new Date((parseInt(user_info.created_at) * 1000))
                         });
                         reject(ErrorSession);
                     } catch {
