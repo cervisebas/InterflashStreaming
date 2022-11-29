@@ -46,7 +46,7 @@ export default class Account extends Component<IProps, IState> {
             {(!isTV)&&<Appbar.Header>
                 <Appbar.Content title={'Cuenta'} />
             </Appbar.Header>}
-            <ScrollView style={{ flex: 2 }}>
+            <ScrollView style={{ flex: 2 }} contentContainerStyle={{ paddingBottom: 16 }}>
                 <View style={styles.accountContent}>
                     <FastImage
                         source={AccountImage}

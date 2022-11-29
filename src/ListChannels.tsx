@@ -47,10 +47,9 @@ export default class ListChannels extends PureComponent<IProps, IState> {
 
     // Controller
     open() {
-        this.setState({
-            visible: true,
-            paddingLeft: ((StatusBar.currentHeight)? StatusBar.currentHeight: 0)
-        });
+        let setState: any = { visible: true };
+        if (DeviceInfo.hasNotch()) setState['paddingLeft'] = ((StatusBar.currentHeight)? StatusBar.currentHeight: 0);
+        this.setState(setState);
     }
     close() {
         this.setState({
@@ -61,15 +60,6 @@ export default class ListChannels extends PureComponent<IProps, IState> {
     render(): React.ReactNode {
         return(<CustomModal visible={this.state.visible} statusBarTranslucent={true} onRequestClose={this.close} onShow={this.goFocus} animationIn={'slideInLeft'} animationOut={'slideOutLeft'}>
             <View style={[styles.content, { paddingLeft: this.state.paddingLeft }]}>
-                {/*<FlatList
-                    ref={this.FlatListRef}
-                    data={this.props.channels}
-                    extraData={this.props}
-                    renderItem={this._renderItem}
-                    getItemLayout={this._getItemLayout}
-                    maxToRenderPerBatch={30}
-                    ItemSeparatorComponent={this._ItemSeparatorComponent}
-                />*/}
                 <ListChannelsComponent
                     ref={this.refListChannelsComponent}
                     channels={this.props.channels}
@@ -85,6 +75,7 @@ const styles = StyleSheet.create({
     content: {
         width: '35%',
         height: '100%',
+        minWidth: 240,
         backgroundColor: overlay(2, Theme.colors.background),
         shadowColor: "#FFFFFF",
         shadowOffset: {
