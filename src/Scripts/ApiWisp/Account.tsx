@@ -2,20 +2,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { decode, encode } from "base-64";
 import { ErrorCode, ErrorConnection, ErrorSession, ErrorStorage, ErrorVerifyLogin } from "./Responses";
+import { AccountData, AccountRequest } from "./Types";
 
 export default class AccountSystem {
     constructor(url: string) {
         this.urlBase = url;
     }
     private urlBase: string = "";
-    login(username: string, password: string) {
+    login(username: string, password: string): Promise<AccountData> {
         return new Promise((resolve, reject)=>{
             axios.get(`${this.urlBase}/player_api.php?username=${username}&password=${password}`).then(async(result)=>{
                 try {
-                    const { user_info: { auth } } = result.data;
-                    if (auth) {
+                    const { user_info }: AccountRequest = result.data;
+                    if (user_info.auth == 1) {
                         await AsyncStorage.setItem('Session', encode(JSON.stringify({ username, password })));
-                        return resolve(true);
+                        return resolve({
+                            username: user_info.username,
+                            status: (user_info.status == 'Active'),
+                            isTrial: (user_info.is_trial == '1'),
+                            maxConnections: parseInt(user_info.max_connections),
+                            expDate: (user_info.exp_date)? new Date(parseInt(user_info.exp_date)): null,
+                            createDate: new Date(parseInt(user_info.created_at))
+                        });
                     }
                     reject(ErrorSession);
                 } catch {
@@ -24,15 +32,22 @@ export default class AccountSystem {
             }).catch(()=>reject(ErrorConnection));
         });
     }
-    verify() {
+    verify(): Promise<AccountData> {
         return new Promise((resolve, reject)=>{
             AsyncStorage.getItem('Session').then((data)=>{
                 if (!data) return reject(ErrorVerifyLogin);
                 const { username, password } = JSON.parse(decode(data));
                 axios.get(`${this.urlBase}/player_api.php?username=${username}&password=${password}`).then(async(result)=>{
                     try {
-                        const { user_info: { auth } } = result.data;
-                        if (parseInt(auth) == 1) return resolve(true);
+                        const { user_info }: AccountRequest = result.data;
+                        if (user_info.auth == 1) return resolve({
+                            username: user_info.username,
+                            status: (user_info.status == 'Active'),
+                            isTrial: (user_info.is_trial == '1'),
+                            maxConnections: parseInt(user_info.max_connections),
+                            expDate: (user_info.exp_date)? new Date(parseInt(user_info.exp_date)): null,
+                            createDate: new Date(parseInt(user_info.created_at))
+                        });
                         reject(ErrorSession);
                     } catch {
                         reject(ErrorCode);

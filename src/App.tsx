@@ -9,12 +9,13 @@ import { AccountAPI, CheckPingIP, getChannels } from "./Scripts/ApiWisp";
 //import RNBootSplash from "react-native-bootsplash";
 import 'react-native/tvos-types.d';
 import Navigation from "./Navigation";
-import { Channels } from "./Scripts/ApiWisp/Types";
+import { AccountData, Channels } from "./Scripts/ApiWisp/Types";
 
 type IProps = {};
 type IState = {
     indexPlayer: number;
     channels: Channels[];
+    userData: AccountData;
 };
 
 
@@ -23,7 +24,8 @@ export default class App extends Component<IProps, IState> {
         super(props);
         this.state = {
             indexPlayer: -1,
-            channels: []
+            channels: [],
+            userData: this.falseUserData
         };
         this.initApp = this.initApp.bind(this);
         this._openMediaPlayer = this._openMediaPlayer.bind(this);
@@ -32,6 +34,7 @@ export default class App extends Component<IProps, IState> {
     }
     private eventInit: EmitterSubscription | undefined = undefined;
     private TVEvents = new TVEventHandler();
+    private falseUserData = { username: '', status: false, isTrial: false, maxConnections: 0, expDate: new Date(), createDate: new Date() };
     // Ref's Components
     private refExtend = createRef<Extends>();
 
@@ -64,9 +67,9 @@ export default class App extends Component<IProps, IState> {
         await this.wait(800);
         this.refExtend.current?.updateScreenLoading('Verificando inicio de sesión...');
         try {
-            await AccountAPI.verify();
+            const dataUser = await AccountAPI.verify();
             await this.wait(500);
-            await this.donwloadChannels();
+            await this.donwloadChannels(dataUser);
             await this.wait(500);
         } catch (error: any) {
             await this.wait(1000);
@@ -81,12 +84,12 @@ export default class App extends Component<IProps, IState> {
     wait(time: number) {
         return new Promise((resolve: (v?: any)=>any)=>setTimeout(resolve, time));
     }
-    async donwloadChannels() {
+    async donwloadChannels(userData: AccountData) {
         try {
             const showProgress = (per: number)=>this.refExtend.current?.updateScreenLoading(`Descargando: ${per}%`);
             const { username, password } = await AccountAPI.getData();
             const channels = await getChannels.getAll(username, password, showProgress);
-            this.setState({ channels });
+            this.setState({ channels, userData });
             this.refExtend.current?.updateScreenLoading(`¡Descarga completa!`);
             return true;
         } catch (error) {
@@ -106,7 +109,11 @@ export default class App extends Component<IProps, IState> {
         return(<View style={{ flex: 1 }}>
             <StatusBar backgroundColor={'#325981'} barStyle={'light-content'} />
             <PaperProvider theme={Theme}>
-                <Navigation channels={this.state.channels} opeMediaPlayer={this._openMediaPlayer} />
+                <Navigation
+                    channels={this.state.channels}
+                    userData={this.state.userData}
+                    opeMediaPlayer={this._openMediaPlayer}
+                />
                 <Extends
                     ref={this.refExtend}
                     indexPlayer={this.state.indexPlayer}

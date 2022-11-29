@@ -5,10 +5,11 @@ import TabNavTv from "./Components/TabNavTv";
 import Account from "./Screens/Account";
 import Categories from "./Screens/Categories";
 import Home from "./Screens/Home";
-import { Channels } from "./Scripts/ApiWisp/Types";
+import { AccountData, Channels } from "./Scripts/ApiWisp/Types";
 
 type IProps = {
     channels: Channels[];
+    userData: AccountData;
     opeMediaPlayer: (source: string, title: string, index: number)=>any;
 };
 type IState = {
@@ -42,7 +43,7 @@ export default class Navigation extends PureComponent<IProps, IState> {
           case 'category':
             return <Categories list={this.props.channels} active={this.state.index} openMediaPlayer={this.props.opeMediaPlayer} />;
           case 'account':
-            return <Account />;
+            return <Account userData={this.props.userData} />;
         }
     }
     render(): React.ReactNode {
