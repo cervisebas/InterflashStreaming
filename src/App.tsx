@@ -10,6 +10,7 @@ import { AccountAPI, CheckPingIP, getChannels } from "./Scripts/ApiWisp";
 import 'react-native/tvos-types.d';
 import Navigation from "./Navigation";
 import { AccountData, Channels } from "./Scripts/ApiWisp/Types";
+import SplashScreen from "./Screens/SplashScreen";
 
 type IProps = {};
 type IState = {
@@ -39,7 +40,7 @@ export default class App extends Component<IProps, IState> {
     private refExtend = createRef<Extends>();
 
     componentDidMount(): void {
-        this.initApp();
+        //this.initApp();
         this.TVEvents.enable(this, this._eventsTV);
         this.eventInit = DeviceEventEmitter.addListener('ReInitApp', this.initApp);
         SystemNavigationBar.setNavigationColor('#325981', 'light', 'navigation');
@@ -129,6 +130,7 @@ export default class App extends Component<IProps, IState> {
                     changeChannel={this._changeChannel}
                     opeMediaPlayer={this._openMediaPlayer}
                 />
+                <SplashScreen onInit={this.initApp} />
             </PaperProvider>
         </View>);
     }
