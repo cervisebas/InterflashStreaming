@@ -1,5 +1,5 @@
 import React, { Component, createRef, PureComponent } from "react";
-import { StyleProp, View, ViewStyle, TextInput as NativeTextInput, StyleSheet, DeviceEventEmitter } from "react-native";
+import { StyleProp, View, ViewStyle, TextInput as NativeTextInput, StyleSheet, DeviceEventEmitter, BackHandler } from "react-native";
 import { Text, TextInput, Button, ProgressBar } from "react-native-paper";
 import CustomModal from "../Components/CustomModal";
 import CustomSnackbar from "../Components/CustomSnackbar";
@@ -112,7 +112,7 @@ export default class Session extends Component<IProps, IState> {
     }
 
     render(): React.ReactNode {
-        return(<CustomModal visible={this.state.visible} onClose={this.onClose} animationInTiming={0} animationOutTiming={0} animationIn={'fadeIn'} animationOut={'fadeOut'} style={styles.backgroud}>
+        return(<CustomModal visible={this.state.visible} onRequestClose={BackHandler.exitApp} onClose={this.onClose} animationInTiming={0} animationOutTiming={0} animationIn={'fadeIn'} animationOut={'fadeOut'} style={styles.backgroud}>
             <View style={{ flex: 1, position: 'relative' }}>
                 {(this.state.isLoading)&&<ProgressBar indeterminate style={styles.progressBar} color={'#FFFFFF'} />}
                 <LinearGradient colors={['rgba(0, 0, 0, 0)', 'rgba(63, 112, 162, 1)']} style={styles.gradient}>
