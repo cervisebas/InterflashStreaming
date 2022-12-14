@@ -13,6 +13,8 @@ type IProps = {
     onClose?: ()=>any;
     animationIn?: ExtractProps<Modal>['animationIn'];
     animationOut?: ExtractProps<Modal>['animationOut'];
+    removeAnimationIn?: boolean;
+    removeAnimationOut?: boolean;
     onRequestClose?: ()=>any;
     animationInTiming?: number;
     animationOutTiming?: number;
@@ -70,10 +72,13 @@ export default class CustomModal extends Component<IProps, IState> {
     render(): React.ReactNode {
         return(<Modal
             isVisible={this.props.visible}
-            animationIn={(this.props.animationIn)? this.props.animationIn: 'fadeInUp'}
-            animationInTiming={(!this.props.animationInTiming)? 250: this.props.animationInTiming}
-            animationOut={(this.props.animationOut)? this.props.animationOut: 'fadeOutDown'}
-            animationOutTiming={(!this.props.animationOutTiming)? 250: this.props.animationOutTiming}
+            // Animation In
+            animationIn={(this.props.removeAnimationIn)? { from: { opacity: 1 }, to: { opacity: 1 } }: (this.props.animationIn)? this.props.animationIn: 'fadeInUp'}
+            animationInTiming={(this.props.removeAnimationIn)? 1: (!this.props.animationInTiming)? 250: this.props.animationInTiming}
+            // Animation Out
+            animationOut={(this.props.removeAnimationOut)? { from: { opacity: 0 }, to: { opacity: 0 } }: (this.props.animationOut)? this.props.animationOut: 'fadeOutDown'}
+            animationOutTiming={(this.props.removeAnimationOut)? 1: (!this.props.animationOutTiming)? 250: this.props.animationOutTiming}
+            // Others parameters
             backdropOpacity={(this.props.transparent)? (!this.props.alwaysBackdrop)? 0: undefined: undefined}
             onBackButtonPress={this.onRequestClose}
             onBackdropPress={this.onRequestClose}

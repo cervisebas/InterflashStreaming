@@ -78,7 +78,7 @@ export default memo(React.forwardRef(function SplashScreen(props: IProps, ref: R
     }, []);*/
 
 
-    return(<CustomModal visible={visible} animationInTiming={0} animationOut={'fadeOut'} animationOutTiming={1000}>
+    return(<CustomModal visible={visible} removeAnimationIn={true} animationOut={'fadeOut'} animationOutTiming={1000}>
         <View style={styles.content}>
             <Animated.Image
                 source={Logo}
